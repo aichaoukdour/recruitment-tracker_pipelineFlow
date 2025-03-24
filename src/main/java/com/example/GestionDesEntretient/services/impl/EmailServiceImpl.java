@@ -16,7 +16,7 @@ import lombok.extern.slf4j.Slf4j;
 public class EmailServiceImpl implements EmailService {
     
     private final JavaMailSender mailSender;
-    private final String fromEmail = "aichaoukdour02@gmail.com"; // Can be externalized to properties
+    private final String fromEmail = "your mail"; // Can be externalized to properties
     
     @Override
     @Async
