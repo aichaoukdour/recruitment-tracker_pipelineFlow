@@ -38,14 +38,14 @@ public class EntretienController {
     public ResponseEntity<EntretienResponseDTO> getEntretienById(@PathVariable Long id) {
         EntretienResponseDTO Entretien = entretienService.getEntretienById(id);
         return ResponseEntity.ok(Entretien);
-    }
+    }*/
     
     @GetMapping
     public ResponseEntity<List<EntretienResponseDTO>> getAllEntretiens() {
         List<EntretienResponseDTO> Entretiens = entretienService.getAllEntretiens();
         return ResponseEntity.ok(Entretiens);
     }
-    
+    /* 
     @GetMapping("/candidate/{candidateId}")
     public ResponseEntity<List<EntretienResponseDTO>> getEntretiensByCandidateId(@PathVariable Long candidateId) {
         List<EntretienResponseDTO> Entretiens = entretienService.getEntretiensByCondidatId(candidateId);
@@ -57,19 +57,19 @@ public class EntretienController {
         List<EntretienResponseDTO> Entretiens = entretienService.getEntretiensByRecruteurId(recruteurId);
         return ResponseEntity.ok(Entretiens);
     }
-    
+    */
     @PutMapping("/{id}")
     public ResponseEntity<EntretienResponseDTO> updateEntretien(
             @PathVariable Long id,
-            @Valid @RequestBody EntretienResponseDTO EntretienDto) {
+            @Valid @RequestBody EntretienRequestDTO EntretienDto) {
         EntretienResponseDTO updatedEntretien = entretienService.updateEntretien(id, EntretienDto);
         return ResponseEntity.ok(updatedEntretien);
     }
-    
+   
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteEntretien(@PathVariable Long id) {
         entretienService.deleteEntretien(id);
         return ResponseEntity.noContent().build();
     }
-    */ 
+
 }

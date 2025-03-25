@@ -60,5 +60,70 @@ public class EntretienServiceImpl implements EntretienService {
         return entretienMapper.toDto(savedEntretien);
     }
 
+    @Override
+    public List<EntretienResponseDTO> getAllEntretiens() {
+        log.info("Fetching all entretiens");
         
+        List<Entretien> entretiens = entretienRepository.findAll();
+
+        
+        return entretiens.stream()
+                .map(entretienMapper::toDto)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+@Transactional
+@CacheEvict(value = "entretiens", allEntries = true)
+public EntretienResponseDTO updateEntretien(Long id, EntretienRequestDTO entretienDto) {
+    log.info("Updating Entretien with ID: {}", id);
+    
+    Entretien existingEntretien = entretienRepository.findById(id)
+            .orElseThrow(() -> new ResourceNotFoundException("Entretien not found with ID: " + id));
+    
+    Condidat condidat = condidatRepository.findById(entretienDto.getCondidatId())
+            .orElseThrow(() -> new ResourceNotFoundException("Candidate not found with ID: " + entretienDto.getCondidatId()));
+    
+    Recruteur recruteur = recruteurRepository.findById(entretienDto.getRecruteurId())
+            .orElseThrow(() -> new ResourceNotFoundException("Recruiter not found with ID: " + entretienDto.getRecruteurId()));
+    
+    // Mise à jour des propriétés de l'entretien
+    existingEntretien.setDebut(entretienDto.getDebut());
+    existingEntretien.setFin(entretienDto.getFin());
+    existingEntretien.setDescription(entretienDto.getDescription());
+    existingEntretien.setLocation(entretienDto.getLocation());
+    existingEntretien.setCondidat(condidat);
+    existingEntretien.setRecruteur(recruteur);
+    
+    Entretien updatedEntretien = entretienRepository.save(existingEntretien);
+    
+    // Envoyer une notification sur la mise à jour
+    notificationService.sendEntretienUpdateNotification(updatedEntretien);
+    
+    return entretienMapper.toDto(updatedEntretien);
 }
+
+
+
+@Override
+@Transactional
+@CacheEvict(value = "entretiens", allEntries = true)  // Clear cache on delete
+public void deleteEntretien(Long id) {
+    log.info("Deleting interview with ID: {}", id);
+    
+    // Récupérer l'entretien avant la suppression
+    Entretien entretien = entretienRepository.findById(id)
+            .orElseThrow(() -> new ResourceNotFoundException("Interview not found with ID: " + id));
+
+    // Envoyer la notification avant de supprimer l'entretien
+    notificationService.sendEntretienCancellationNotification(entretien);
+    
+    // Supprimer l'entretien
+    entretienRepository.deleteById(id);
+    log.info("Entretien with ID: {} deleted successfully", id);
+}
+
+}
+
+
+        

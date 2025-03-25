@@ -11,10 +11,13 @@ public class SecurityConfigChain {
 
     public void configureRequests(HttpSecurity http) throws Exception {
         http
-            .authorizeHttpRequests(requests -> requests
+                .authorizeHttpRequests(requests -> requests
+                .requestMatchers(HttpMethod.GET, "/api/v1/entretiens/*").hasRole("ADMIN")  // Specify the role here
                 .requestMatchers(HttpMethod.POST, "/api/v1/entretiens/{Id}/**").hasRole("ADMIN")  // Specify the role here
+                .requestMatchers(HttpMethod.PUT, "/api/v1/entretiens/{Id}/").hasRole("ADMIN")  // Specify the role here
                 .anyRequest().authenticated())
-            .httpBasic(withDefaults())
-            .csrf(csrf -> csrf.disable());
+                .httpBasic(withDefaults())
+                .csrf(csrf -> csrf.disable());
     }
+
 }
