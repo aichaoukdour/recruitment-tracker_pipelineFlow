@@ -3,6 +3,7 @@ package com.example.GestionDesEntretient.services.impl;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Service;
 
 import com.example.GestionDesEntretient.dto.EntretienRequestDTO;
@@ -36,6 +37,7 @@ public class EntretienServiceImpl implements EntretienService {
     
     @Override
     @Transactional
+    @CacheEvict(value = "entretiens", allEntries = true)  // Clears cache on new entry
     public EntretienResponseDTO createEntretien(EntretienRequestDTO entretienDto) {
         log.info("Creating new Entretien for condidat ID: {} and recruiter ID: {}", 
                 entretienDto.getCondidatId(), entretienDto.getRecruteurId());

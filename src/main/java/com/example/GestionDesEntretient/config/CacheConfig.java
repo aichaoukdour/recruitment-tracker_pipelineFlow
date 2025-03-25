@@ -14,12 +14,8 @@ public class CacheConfig {
     @Bean
     @Primary
     public CacheManager itemsCacheManager() {
-        return new ConcurrentMapCacheManager("items");
+        return new ConcurrentMapCacheManager("entretiens");
     }
 
-    @Bean
-    public CacheManager usersCacheManager() {
-        return new ConcurrentMapCacheManager("users");
-    }
 
 }
