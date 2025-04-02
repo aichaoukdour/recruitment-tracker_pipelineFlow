@@ -1,7 +1,7 @@
 import React from 'react';
 import { useForm } from 'react-hook-form';
 import './ScheduleInterviewForm.css';
-import logo from './logo.jpeg'; // Correctly importing the logo
+import logo from './logo.jpeg'; 
 
 const ScheduleInterviewForm = () => {
   const { register, handleSubmit, formState: { errors } } = useForm();
@@ -14,13 +14,10 @@ const ScheduleInterviewForm = () => {
   return (
     <div className="form-container">
       <div className="form-card">
-        {/* Using the imported logo */}
         <img src={logo} alt="Logo" className="logo" />
         <h2 className="form-title">Planifier un entretien</h2>
-        
         <form onSubmit={handleSubmit(onSubmit)} className="form-fields">
-          
-          {/* Candidate ID */}
+
           <div className="form-field">
             <label className="form-label">Candidat ID</label>
             <input
@@ -32,7 +29,6 @@ const ScheduleInterviewForm = () => {
             {errors.candidateId && <p className="error-message">{errors.candidateId.message}</p>}
           </div>
 
-          {/* Recruiter ID */}
           <div className="form-field">
             <label className="form-label">Recruteur ID</label>
             <input
@@ -44,7 +40,7 @@ const ScheduleInterviewForm = () => {
             {errors.recruiterId && <p className="error-message">{errors.recruiterId.message}</p>}
           </div>
 
-          {/* Interview Date */}
+
           <div className="form-field">
             <label className="form-label">Date d'entretien</label>
             <input
@@ -55,7 +51,6 @@ const ScheduleInterviewForm = () => {
             {errors.date && <p className="error-message">{errors.date.message}</p>}
           </div>
 
-          {/* Interview Time */}
           <div className="form-field">
             <label className="form-label">Heure d'entretien</label>
             <input
@@ -66,7 +61,6 @@ const ScheduleInterviewForm = () => {
             {errors.time && <p className="error-message">{errors.time.message}</p>}
           </div>
 
-          {/* Submit */}
           <button
             type="submit"
             className="submit-button"
