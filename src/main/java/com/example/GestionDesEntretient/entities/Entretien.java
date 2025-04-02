@@ -18,7 +18,7 @@ public class Entretien {
 
     @Column(nullable = false)
     private LocalDateTime debut;
-    
+
     @Column(nullable = false)
     private LocalDateTime fin;
 
@@ -35,17 +35,20 @@ public class Entretien {
     @JoinColumn(name = "condidat_id")
     private Condidat condidat;
 
+    // Relationship with the Recruteur entity
     @ManyToOne(optional = false)
     @JoinColumn(name = "recruteur_id")
     private Recruteur recruteur;
 
+    // Automatically set the default status before persisting
     @PrePersist
     public void prePersist() {
         if (statut == null) {
             statut = StatutEntretien.SCHEDULED;
         }
     }
-    
+
+    // Validation to ensure the end time is after the start time
     @AssertTrue(message = "End time must be after start time")
     public boolean isEndTimeAfterStartTime() {
         return fin == null || debut == null || fin.isAfter(debut);
@@ -114,6 +117,5 @@ public class Entretien {
     public void setRecruteur(Recruteur recruteur) {
         this.recruteur = recruteur;
     }
-
 
 }

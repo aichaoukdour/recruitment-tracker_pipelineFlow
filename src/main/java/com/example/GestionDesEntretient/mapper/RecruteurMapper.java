@@ -7,9 +7,9 @@ import org.mapstruct.Mapping;
 
 @Mapper(componentModel = "spring")
 public interface RecruteurMapper {
-    
+
     @Mapping(target = "entretien", ignore = true)
     Recruteur toEntity(RecruteurDto dto);
-    
+
     RecruteurDto toDto(Recruteur entity);
 }

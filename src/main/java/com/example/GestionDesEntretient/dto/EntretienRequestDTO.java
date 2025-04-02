@@ -40,10 +40,9 @@ public class EntretienRequestDTO implements Serializable {
     @NotNull(message = "Candidate ID is required")
     @JsonProperty("condidat_id")
     private Long condidatId;
-    
+
     @NotNull(message = "Recruiter ID is required")
     @JsonProperty("recruteur_id")
     private Long recruteurId;
 
 }
-

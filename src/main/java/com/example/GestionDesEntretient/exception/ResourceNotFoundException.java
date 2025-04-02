@@ -1,6 +1,5 @@
 package com.example.GestionDesEntretient.exception;
 
-
 public class ResourceNotFoundException extends RuntimeException {
     private String resource;
     private Long resourceId;

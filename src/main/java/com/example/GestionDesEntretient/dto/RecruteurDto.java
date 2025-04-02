@@ -19,7 +19,7 @@ public class RecruteurDto implements Serializable {
 
     @JsonProperty("nom")
     private String nom;
-    
+
     private String email;
 
 }

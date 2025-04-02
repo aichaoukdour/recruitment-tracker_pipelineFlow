@@ -16,11 +16,11 @@ import lombok.*;
 public class EntretienResponseDTO implements Serializable {
 
     private Long id;
-    
+
     @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
     @JsonProperty("debut_de_entretien")
     private LocalDateTime debut;
-    
+
     @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
     @JsonProperty("fin_de_entretien")
     private LocalDateTime fin;
@@ -32,4 +32,3 @@ public class EntretienResponseDTO implements Serializable {
     private RecruteurDto recruteur;
 
 }
-

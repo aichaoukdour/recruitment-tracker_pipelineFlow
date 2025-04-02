@@ -9,7 +9,9 @@ import com.example.GestionDesEntretient.entities.Recruteur;
 
 @Repository
 public interface RecruteurRepository extends JpaRepository<Recruteur, Long> {
+    
     Optional<Recruteur> findByEmail(String email);
+
     boolean existsByEmail(String email);
 
 }

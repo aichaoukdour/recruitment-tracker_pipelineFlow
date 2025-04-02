@@ -17,38 +17,55 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 @Slf4j
 public class NotificationServiceImpl implements NotificationService {
-    
+
     private final EmailService emailService;
     private final SmsService smsService;
-    
+
     private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
-    
+
     @Override
     public void sendEntretienConfirmation(Entretien entretien) {
+        sendNotification(entretien, "Entretien Confirmation", this::buildEntretienConfirmationEmailBody, this::buildEntretienConfirmationSmsText);
+    }
+
+    @Override
+    public void sendEntretienUpdateNotification(Entretien entretien) {
+        sendNotification(entretien, "Entretien Update", this::buildEntretienUpdateEmailBody, this::buildEntretienUpdateSmsText);
+    }
+
+    @Override
+    public void sendEntretienCancellationNotification(Entretien entretien) {
+        sendNotification(entretien, "Interview Cancellation", this::buildEntretienCancellationEmailBody, this::buildEntretienCancellationSmsText);
+    }
+
+    private void sendNotification(Entretien entretien, String emailSubject, EmailBodyBuilder emailBodyBuilder, SmsTextBuilder smsTextBuilder) {
         Condidat condidat = entretien.getCondidat();
-        String emailSubject = "Entretien Confirmation";
-        
-        String emailBody = buildEntretienConfirmationEmailBody(entretien, condidat);
-        String smsText = buildEntretienConfirmationSmsText(entretien);
-        
-        // Send email notification
+        String emailBody = emailBodyBuilder.build(entretien, condidat);
+        String smsText = smsTextBuilder.build(entretien);
+
+        sendEmailNotification(condidat.getEmail(), emailSubject, emailBody);
+        sendSmsNotification(condidat.getNumeroTelephonique(), smsText, condidat.getEmail());
+    }
+
+    private void sendEmailNotification(String email, String subject, String body) {
         try {
-            emailService.sendEmail(condidat.getEmail(), emailSubject, emailBody);
-            log.info("Email sent successfully to condidat: {}", condidat.getEmail());
+            emailService.sendEmail(email, subject, body);
+            log.info("Email sent successfully to: {}", email);
         } catch (Exception e) {
-            log.error("Failed to send email to condidat: {}", condidat.getEmail(), e);
+            log.error("Failed to send email to: {}", email, e);
         }
-        
-        // Send SMS notification if phone number is available
-        if (condidat.getNumeroTelephonique() != null && !condidat.getNumeroTelephonique().isEmpty()) {
+    }
+
+    private void sendSmsNotification(String phoneNumber, String text, String email) {
+        if (phoneNumber != null && !phoneNumber.isEmpty()) {
             try {
-                smsService.sendSms(condidat.getNumeroTelephonique(), smsText);
-                log.info("SMS sent successfully to condidat: {}", condidat.getNumeroTelephonique());
+                smsService.sendSms(phoneNumber, text);
+                log.info("SMS sent successfully to: {}", phoneNumber);
             } catch (Exception e) {
-                log.error("Failed to send SMS to condidat: {}", condidat.getNumeroTelephonique(), e);
+                log.error("Failed to send SMS to: {}", phoneNumber, e);
             }
         } else {
-            log.info("No phone number provided for condidat: {}", condidat.getEmail());
+            log.info("No phone number provided for: {}", email);
         }
     }
 
@@ -75,33 +92,13 @@ public class NotificationServiceImpl implements NotificationService {
                 entretien.getDescription() != null ? "ℹ️ Informations supplémentaires : " + entretien.getDescription() : ""
         );
     }
-    
-   private String buildEntretienConfirmationSmsText(Entretien entretien) {
+
+    private String buildEntretienConfirmationSmsText(Entretien entretien) {
         return String.format(
                 "Your Entretien is confirmed for %s at %s. Details sent to your email.",
                 entretien.getDebut().format(DATE_FORMATTER),
                 entretien.getLocation()
         );
-    }
-
-
-    
-    @Override
-    public void sendEntretienUpdateNotification(Entretien entretien) {
-        Condidat condidat = entretien.getCondidat();
-        String emailSubject = "Entretien Update";
-        String emailBody = buildEntretienUpdateEmailBody(entretien, condidat);
-        String smsText = buildEntretienUpdateSmsText(entretien);
-        
-        // Send email notification
-        emailService.sendEmail(condidat.getEmail(), emailSubject, emailBody);
-        
-        // Send SMS notification if phone number is available
-        if (condidat.getNumeroTelephonique() != null && !condidat.getNumeroTelephonique().isEmpty()) {
-            smsService.sendSms(condidat.getNumeroTelephonique(), smsText);
-        }
-        
-        log.info("Entretien update notifications sent to Condidat: {}", condidat.getEmail());
     }
 
     private String buildEntretienUpdateEmailBody(Entretien entretien, Condidat condidat) {
@@ -123,34 +120,15 @@ public class NotificationServiceImpl implements NotificationService {
                 entretien.getRecruteur().getPrenom(),
                 entretien.getRecruteur().getNom(),
                 entretien.getDescription() != null ? "ℹ️ Informations supplémentaires : " + entretien.getDescription() : ""
-       );
+        );
     }
-    
+
     private String buildEntretienUpdateSmsText(Entretien entretien) {
         return String.format(
                 "Your interview has been updated. New time: %s at %s. Check your email for details.",
                 entretien.getDebut().format(DATE_FORMATTER),
                 entretien.getLocation()
         );
-    }
-
-    @Override
-    public void sendEntretienCancellationNotification(Entretien entretien) {
-        Condidat condidat = entretien.getCondidat();
-        String emailSubject = "Interview Cancellation";
-        
-        String emailBody = buildEntretienCancellationEmailBody(entretien, condidat);
-        String smsText = buildEntretienCancellationSmsText(entretien);
-        
-        // Send email notification
-        emailService.sendEmail(condidat.getEmail(), emailSubject, emailBody);
-        
-        // Send SMS notification if phone number is available
-        if (condidat.getNumeroTelephonique() != null && !condidat.getNumeroTelephonique().isEmpty()) {
-            smsService.sendSms(condidat.getNumeroTelephonique(), smsText);
-        }
-        
-        log.info("Interview cancellation notifications sent to condidat: {}", condidat.getEmail());
     }
 
     private String buildEntretienCancellationEmailBody(Entretien entretien, Condidat condidat) {
@@ -166,13 +144,21 @@ public class NotificationServiceImpl implements NotificationService {
                 entretien.getDebut().format(DATE_FORMATTER)
         );
     }
-    
+
     private String buildEntretienCancellationSmsText(Entretien entretien) {
         return String.format(
                 "Your interview scheduled for %s has been cancelled. Check your email for more information.",
                 entretien.getDebut().format(DATE_FORMATTER)
         );
     }
+
+    @FunctionalInterface
+    private interface EmailBodyBuilder {
+        String build(Entretien entretien, Condidat condidat);
+    }
+
+    @FunctionalInterface
+    private interface SmsTextBuilder {
+        String build(Entretien entretien);
+    }
 }
-
-

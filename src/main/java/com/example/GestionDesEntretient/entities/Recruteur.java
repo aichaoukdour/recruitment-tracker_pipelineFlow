@@ -6,7 +6,6 @@ import java.util.Set;
 import jakarta.persistence.*;
 import lombok.*;
 
-
 @Entity
 @Table(name = "recruteurs")
 @AllArgsConstructor
@@ -19,13 +18,13 @@ public class Recruteur {
 
     @Column(name = "prenom", nullable = false)
     private String prenom;
-    
+
     @Column(name = "nom", nullable = false)
     private String nom;
 
     @Column(unique = true, nullable = false)
     private String email;
-    
+
     @OneToMany(mappedBy = "recruteur", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Entretien> entretien = new HashSet<>();
 
@@ -68,8 +67,5 @@ public class Recruteur {
     public void setEntretien(Set<Entretien> entretien) {
         this.entretien = entretien;
     }
-    
 
 }
-
-   

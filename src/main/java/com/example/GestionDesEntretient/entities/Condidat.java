@@ -19,7 +19,7 @@ public class Condidat {
 
     @Column(name = "prenom", nullable = false)
     private String prenom;
-    
+
     @Column(name = "nom", nullable = false)
     private String nom;
 
@@ -28,8 +28,9 @@ public class Condidat {
 
     @Column(unique = true, nullable = false)
     private String numeroTelephonique;
-    
+
     @OneToMany(mappedBy = "condidat", cascade = CascadeType.ALL, orphanRemoval = true)
+    @Builder.Default
     private Set<Entretien> entretien = new HashSet<>();
 
     public Long getId() {
@@ -79,6 +80,5 @@ public class Condidat {
     public void setEntretien(Set<Entretien> entretien) {
         this.entretien = entretien;
     }
-
 
 }

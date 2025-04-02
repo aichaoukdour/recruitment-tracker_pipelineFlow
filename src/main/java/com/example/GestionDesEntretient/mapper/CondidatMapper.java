@@ -8,10 +8,10 @@ import com.example.GestionDesEntretient.entities.Condidat;
 
 @Mapper(componentModel = "spring")
 public interface CondidatMapper {
-    
+
     @Mapping(target = "entretien", ignore = true)
     Condidat toEntity(CondidatDto dto);
-    
+
     CondidatDto toDto(Condidat entity);
 
 }

@@ -14,24 +14,24 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 @Slf4j
 public class EmailServiceImpl implements EmailService {
-    
+
     private final JavaMailSender mailSender;
-    private final String fromEmail = "aichaoukdour02@gmail.com"; // Can be externalized to properties
-    
+    private final String fromEmail = "aichaoukdour02@gmail.com"; // Replace with your sender email
+
     @Override
     @Async
     public void sendEmail(String to, String subject, String body) {
         try {
             log.info("Sending email to: {}", to);
-            
+
             SimpleMailMessage message = new SimpleMailMessage();
             message.setFrom(fromEmail);
             message.setTo(to);
             message.setSubject(subject);
             message.setText(body);
-            
+
             mailSender.send(message);
-            
+
             log.info("Email sent successfully to: {}", to);
         } catch (Exception e) {
             log.error("Failed to send email to: {}", to, e);

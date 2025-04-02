@@ -12,14 +12,12 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 
 @EnableAsync
-@SpringBootApplication(scanBasePackages = "com.example.GestionDesEntretient")
+@SpringBootApplication
 public class GestionDesEntretientApplication {
 
 	public static void main(String[] args) {
 		SpringApplication.run(GestionDesEntretientApplication.class, args);
 	}
-
-	
 
 	@Bean
 	public PasswordEncoder passwordEncoder() {
@@ -28,23 +26,22 @@ public class GestionDesEntretientApplication {
 
 	@Bean
 	public UserDetailsService userDetailsService(PasswordEncoder passwordEncoder) {
-		String encodedAdminPassword = passwordEncoder.encode("admin");
-		String encodedUserPassword = passwordEncoder.encode("user");
-		String encodedManagerPassword = passwordEncoder.encode("manager");
-
 		UserDetails admin = User.builder()
 				.username("admin")
-				.password(encodedAdminPassword)
+				.password(passwordEncoder.encode("admin"))
+				.roles("ADMIN")
 				.build();
 
 		UserDetails user = User.builder()
 				.username("user")
-				.password(encodedUserPassword)
+				.password(passwordEncoder.encode("user"))
+				.roles("USER")
 				.build();
 
 		UserDetails manager = User.builder()
 				.username("manager")
-				.password(encodedManagerPassword)
+				.password(passwordEncoder.encode("manager"))
+				.roles("MANAGER")
 				.build();
 
 		return new InMemoryUserDetailsManager(admin, user, manager);

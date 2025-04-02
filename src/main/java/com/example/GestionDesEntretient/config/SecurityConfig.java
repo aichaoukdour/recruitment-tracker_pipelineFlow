@@ -10,13 +10,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 public class SecurityConfig {
 
     @Autowired
-    private SecurityConfigChain securityConfigChain;  // Inject the path configuration class
-
+    private SecurityConfigChain securityConfigChain;  
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        // Use the path configuration defined in SecurityConfigChain
         securityConfigChain.configureRequests(http);
 
-        return http.build();  // Build and return the security filter chain
+        return http.build();  
     }
+    
 }

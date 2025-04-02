@@ -10,5 +10,6 @@ import com.example.GestionDesEntretient.entities.Condidat;
 @Repository
 public interface CondidatRepository extends JpaRepository<Condidat, Long> {
     Optional<Condidat> findByEmail(String email);
+
     boolean existsByEmail(String email);
 }

@@ -16,6 +16,5 @@ public class CacheConfig {
     public CacheManager itemsCacheManager() {
         return new ConcurrentMapCacheManager("entretiens");
     }
-
-
+    
 }
